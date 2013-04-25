@@ -7,8 +7,14 @@
 ;;; Provides a list of all defined identifiers - constants, syntaxes and keywords
 ;;; to the GeSHi language for racket.
 
-(require "geshi-utils.rkt")
-(provide racket-KEYWORDS-alist)
+(require "geshi-utils.rkt" "tasklist.rkt")
+(provide racket-KEYWORDS-alist racket-URLS-alist
+         racket-SYMBOL-like-keywords-and-syntaxes)
+
+(todo #<<EOS
+URLs should be formed more smartly by discovering which module they came from.
+EOS
+)
 
 (define (identifiers-from-namespace ns)
   (for*/list
@@ -46,13 +52,42 @@
 
 (define (identifiers->KEYWORDS-entry ids)
   (sort (map symbol->geshi-identifier ids) string<?))
-(define keywords-1 (identifiers->KEYWORDS-entry base-identifiers))
-(define keywords-2 (identifiers->KEYWORDS-entry base-syntaxes))
-(define keywords-3 (identifiers->KEYWORDS-entry racket-identifiers))
-(define keywords-4 (identifiers->KEYWORDS-entry racket-syntaxes))
+
+(define racket-SYMBOL-like-keywords-and-syntaxes-raw
+ (filter
+  (lambda (s)
+   (not (for/first ((c (in-string (symbol->string s)))
+                    #:when (or (char-alphabetic? c)
+                               (char-numeric? c)))
+                   c)))
+  (append base-identifiers base-syntaxes racket-identifiers racket-syntaxes)))
+
+(define racket-SYMBOL-like-keywords-and-syntaxes
+ (identifiers->KEYWORDS-entry racket-SYMBOL-like-keywords-and-syntaxes-raw))
+
+(define r-S-l-k-s# (for/hash ((s racket-SYMBOL-like-keywords-and-syntaxes-raw))
+                    (values s #t)))
+
+(define (remove-SYMBOL-like list-of-symbols)
+ (filter (lambda (s) (not (hash-ref r-S-l-k-s# s #f))) list-of-symbols))
+
+(define keywords-1 (identifiers->KEYWORDS-entry
+                    (remove-SYMBOL-like base-identifiers)))
+(define keywords-2 (identifiers->KEYWORDS-entry 
+                    (remove-SYMBOL-like base-syntaxes)))
+(define keywords-3 (identifiers->KEYWORDS-entry 
+                    (remove-SYMBOL-like racket-identifiers)))
+(define keywords-4 (identifiers->KEYWORDS-entry 
+                    (remove-SYMBOL-like racket-syntaxes)))
 
 (define racket-KEYWORDS-alist
   `((1 . ,keywords-1) 
     (2 . ,keywords-2)
     (3 . ,keywords-3)
     (4 . ,keywords-4)))
+
+(define racket-URLS-alist
+  `((1 . "http://docs.racket-lang.org/reference/") 
+    (2 . "http://docs.racket-lang.org/reference/")
+    (3 . "http://docs.racket-lang.org/reference/")
+    (4 . "http://docs.racket-lang.org/reference/")))

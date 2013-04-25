@@ -2,9 +2,9 @@
 /*************************************************************************************
  * racket.php
  * ----------
- * Author:          Tim Brown tim@timb.net
- * Copyright:   (c) 2013 Tim Brown (https://github.com/tim-brown/geshi-racket)
- * Release Version: 1.0
+ * Author:          Tim Brown (tim@timb.net)
+ * Copyright:   (c) 2013 Tim Brown ((https://github.com/tim-brown/geshi-racket))
+ * Release Version: 1.1
  * Date Started:    2013-03-01
  *
  * Racket language file for GeSHi.
@@ -16,13 +16,17 @@
  *
  * CHANGES
  * -------
+ *   1.0 (2013-03-31)
+      - Initial Release1.1 (2013-03-31)
+      - Added URLs, "symbol"-like identifiers moved to SYMBOLS*
  *
- * TODO (updated 2013-03-31)
+ * TODO (updated 2013-04-25)
  * -------------------------
  *   * better handling of empty and short arrays
      * care more about indentation and line lengths
      * most compound regexps are possibly over-bracketed: (or ...)
      * most compound regexps are possibly over-bracketed: (: ...)
+     * URLs should be formed more smartly by discovering which module they came from.
      * '|...| identifiers
      * #<<HERE strings
      * #;(...) comments -- (note: requires balanced parenthesis regexp)
@@ -60,9 +64,8 @@ $language_data = array(
         ),
     'ESCAPE_CHAR' => '\\',
     'KEYWORDS' => array(
-        1 => array('&gt;', '&gt;=', '&lt;', '&lt;=', '*', '+', '-', '/', '=', 
-            'abort-current-continuation', 'abs', 'absolute-path?', 'acos', 
-            'add1', 'alarm-evt', 'always-evt', 'andmap', 'angle', 'append', 
+        1 => array('abort-current-continuation', 'abs', 'absolute-path?', 'acos', 'add1', 
+            'alarm-evt', 'always-evt', 'andmap', 'angle', 'append', 
             'arithmetic-shift', 'arity-at-least-value', 'arity-at-least?', 
             'asin', 'assf', 'assoc', 'assq', 'assv', 'atan', 'banner', 
             'bitwise-and', 'bitwise-bit-field', 'bitwise-bit-set?', 
@@ -495,18 +498,17 @@ $language_data = array(
         2 => array('#%app', '#%datum', '#%expression', '#%module-begin', '#%plain-app', 
             '#%plain-lambda', '#%plain-module-begin', '#%provide', '#%require', 
             '#%stratified-body', '#%top', '#%top-interaction', 
-            '#%variable-reference', '...', ':do-in', '=&gt;', '_', 
-            'all-defined-out', 'all-from-out', 'and', 'apply', 
-            'arity-at-least', 'begin', 'begin-for-syntax', 'begin0', 
-            'call-with-input-file', 'call-with-input-file*', 
-            'call-with-output-file', 'call-with-output-file*', 'case', 
-            'case-lambda', 'combine-in', 'combine-out', 'cond', 'date', 
-            'date*', 'define', 'define-for-syntax', 'define-logger', 
-            'define-namespace-anchor', 'define-sequence-syntax', 
-            'define-struct', 'define-struct/derived', 'define-syntax', 
-            'define-syntax-rule', 'define-syntaxes', 'define-values', 
-            'define-values-for-syntax', 'do', 'else', 'except-in', 
-            'except-out', 'exn', 'exn:break', 'exn:break:hang-up', 
+            '#%variable-reference', ':do-in', 'all-defined-out', 
+            'all-from-out', 'and', 'apply', 'arity-at-least', 'begin', 
+            'begin-for-syntax', 'begin0', 'call-with-input-file', 
+            'call-with-input-file*', 'call-with-output-file', 
+            'call-with-output-file*', 'case', 'case-lambda', 'combine-in', 
+            'combine-out', 'cond', 'date', 'date*', 'define', 
+            'define-for-syntax', 'define-logger', 'define-namespace-anchor', 
+            'define-sequence-syntax', 'define-struct', 'define-struct/derived', 
+            'define-syntax', 'define-syntax-rule', 'define-syntaxes', 
+            'define-values', 'define-values-for-syntax', 'do', 'else', 
+            'except-in', 'except-out', 'exn', 'exn:break', 'exn:break:hang-up', 
             'exn:break:terminate', 'exn:fail', 'exn:fail:contract', 
             'exn:fail:contract:arity', 'exn:fail:contract:continuation', 
             'exn:fail:contract:divide-by-zero', 
@@ -697,13 +699,13 @@ $language_data = array(
             'with-output-to-bytes', 'with-output-to-string', 'would-be-future', 
             'writable&lt;%&gt;', 'xor', 
             ),
-        4 => array('&gt;=/c', '&lt;=/c', '-&gt;', '-&gt;*', '-&gt;*m', '-&gt;d', '-&gt;dm', 
-            '-&gt;i', '-&gt;m', '=/c', '==', 'absent', 'abstract', 
-            'add-between', 'and/c', 'any', 'any/c', 'augment', 'augment*', 
-            'augment-final', 'augment-final*', 'augride', 'augride*', 
-            'between/c', 'blame-add-context', 'box-immutable/c', 'box/c', 
-            'call-with-file-lock/timeout', 'case-&gt;', 'case-&gt;m', 'class', 
-            'class*', 'class-field-accessor', 'class-field-mutator', 'class/c', 
+        4 => array('&gt;=/c', '&lt;=/c', '-&gt;*m', '-&gt;d', '-&gt;dm', '-&gt;i', '-&gt;m', 
+            '=/c', 'absent', 'abstract', 'add-between', 'and/c', 'any', 
+            'any/c', 'augment', 'augment*', 'augment-final', 'augment-final*', 
+            'augride', 'augride*', 'between/c', 'blame-add-context', 
+            'box-immutable/c', 'box/c', 'call-with-file-lock/timeout', 
+            'case-&gt;', 'case-&gt;m', 'class', 'class*', 
+            'class-field-accessor', 'class-field-mutator', 'class/c', 
             'class/derived', 'command-line', 'compound-unit', 
             'compound-unit/infer', 'cons/c', 'continuation-mark-key/c', 
             'contract', 'contract-out', 'contract-struct', 'contracted', 
@@ -782,9 +784,11 @@ $language_data = array(
             ),
         ),
     'SYMBOLS' => array(
-        0 => array('#fl', '#fx', '#s', '#', '#f', '#F', '#false', '#t', '#T', '#true', '#lang', 
-            '#reader', '.', '\'', '#`', '#,@', '#,', '#\'', '`', '@', ',', 
-            '#%', '#$', '#&', '#~', '#rx', '#px', '#<<', '#;', '#hash', '#', 
+        0 => array('&gt;', '&gt;=', '&lt;', '&lt;=', '*', '+', '-', '-&gt;', '-&gt;*', '...', '/', 
+            '=', '=&gt;', '==', '_', '#fl', '#fx', '#s', '#', '#f', '#F', 
+            '#false', '#t', '#T', '#true', '#lang', '#reader', '.', '\'', '#`', 
+            '#,@', '#,', '#\'', '`', '@', ',', '#%', '#$', '#&', '#~', '#rx', 
+            '#px', '#<<', '#;', '#hash', '#', 
             ),
         ),
     'CASE_SENSITIVE' => array(
@@ -919,7 +923,10 @@ $language_data = array(
             ),
         ),
     'URLS' => array(
-        1 => '',
+        1 => 'http://docs.racket-lang.org/reference/',
+        2 => 'http://docs.racket-lang.org/reference/',
+        3 => 'http://docs.racket-lang.org/reference/',
+        4 => 'http://docs.racket-lang.org/reference/',
         ),
     'OOLANG' => false,
     'OBJECT_SPLITTERS' => array(

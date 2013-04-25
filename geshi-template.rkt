@@ -7,6 +7,7 @@
 ;;; The text template that provides the standard headers etc. for a GeSHi highlighting
 ;;; PHP source.
 
+(require racket/date)
 (require "geshi-utils.rkt" "tasklist.rkt")
 (provide render-geshi-template)
 
@@ -40,8 +41,8 @@ EOF
           /*************************************************************************************
            * racket.php
            * ----------
-           * Author:          @(M 'author) @(M 'email)
-           * Copyright:   (c) @(M 'copyright-date) @(M 'author) @(M 'url)
+           * Author:          @(M 'author) (@(M 'email))
+           * Copyright:   (c) @(M 'copyright-date) @(M 'author) (@(M 'url))
            * Release Version: @(M 'release-version)
            * Date Started:    @(M 'date-started)
            *
@@ -51,6 +52,13 @@ EOF
            *
            * CHANGES
            * -------
+           *   @(map (match-lambda
+                       [(list vers (? date? dt) (? list? desc))
+                       (format "~a (~a)~%~a"
+                               vers (parameterize ((date-display-format 'iso-8601)) (date->string dt))
+                               (string-join (map (lambda (x) (format " - ~a" x)) desc) "\n"))]
+                       [x (format "~a~%" x)])
+                       (M 'change-list))*
            *
            * TODO (updated @(M 'release-date))
            * --------------@(make-string (string-length (M 'release-date)) #\-)-

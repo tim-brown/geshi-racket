@@ -34,8 +34,12 @@ This file was built automatically from the scripts in
  * Use those scripts to regenerate the file.
 EOF
                   )
-    (release-version "1.0")
+    (release-version "1.1")
     (release-date ,(parameterize ((date-display-format 'iso-8601)) (date->string (current-date))))
+    (change-list
+     (("1.0" ,(seconds->date (find-seconds 0 0 0 31 3 2013)) ("Initial Release"))
+     ("1.1" ,(seconds->date (find-seconds 0 0 0 31 3 2013))
+      ("Added URLs, \"symbol\"-like identifiers moved to SYMBOLS"))))
     ))
 
 (define scribble-RktCss-styles
@@ -66,7 +70,10 @@ EOF
   "'((\\\\ )|([^[:space:]()[\\]{}\",']))+")
 
 (define racket-reader-symbols
-  (list "#fl" "#fx" "#s" "#"
+ (append
+  racket-SYMBOL-like-keywords-and-syntaxes
+  (list
+   "#fl" "#fx" "#s" "#"
         "#f" "#F" "#false" "#t" "#T" "#true"
         "#lang" "#reader"
         "." "'" "#`" "#,@" "#,"
@@ -75,7 +82,7 @@ EOF
         "#rx" "#px" "#<<" ; TODO: move to STRINGS(?)
         "#;" ; TODO: move to COMMENTS(?)
         "#hash"
-        "#"))
+        "#")))
 
 (define-syntax (style stx)
   (syntax-case stx ()
@@ -123,7 +130,7 @@ EOF
                                (2 . ,(style RktPn))
                                (3 . ,(style RktVal))))
                  ("SCRIPT" . ())))
-    ("URLS" . ((1 . "")))
+    ("URLS" . ,racket-URLS-alist)
     ("OOLANG" . false)
     ("OBJECT_SPLITTERS" . ())    
     ("REGEXPS" . ((1 . ,racket-character-regexp)
